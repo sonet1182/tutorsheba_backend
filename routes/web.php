@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\Auth\LoginController;
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,4 +23,28 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+Route::group(['middleware' => ['auth:admin']], function () {
+    // Route::get('/users', [UserController::class, 'users']);
+    Route::get('/users', function () {
+        return 'ok';
+    });
+});
+
+Route::group(['prefix' => '/admin', 'namespace' => 'Admin', 'as' => 'admin.'], function () {
+    Route::get('/users', function () {
+        return 'ok';
+    });
+
+    Route::get('login', [LoginController::class, 'showLoginForm'])
+        ->name('login_form');
+    Route::post('login', [LoginController::class, 'login'])
+        ->name('login');
+
+    //Admin Dashboard
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::post('logout', [LoginController::class, 'destroy'])
+                ->name('logout');
+});
+
+require __DIR__ . '/auth.php';
