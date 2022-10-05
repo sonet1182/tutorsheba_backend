@@ -8,6 +8,7 @@ use App\Http\Controllers\Frontend\TeacherController;
 use App\Http\Controllers\Frontend\TuitionController;
 use App\Http\Controllers\SearchManageController;
 use App\Http\Controllers\Tutor\DashboardController as TutorDashboardController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -86,3 +87,7 @@ Route::group(['prefix' => '/admin', 'namespace' => 'Admin', 'as' => 'admin.'], f
 });
 
 require __DIR__ . '/auth.php';
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
