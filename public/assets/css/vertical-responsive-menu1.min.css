@@ -32,7 +32,7 @@
 .toggle_menu i:hover {
     color: #ed2a26;
 }
-	
+
 .vertical_nav {
 	position: fixed;
     left: -240px;
@@ -102,7 +102,7 @@
 	color: #333;
 }
 
-.menu--subitens__opened .sub_menu { 
+.menu--subitens__opened .sub_menu {
 	display: block;
 }
 
@@ -110,7 +110,7 @@
 	display: block;
     overflow: hidden;
     font-size: 14px;
-    text-decoration: none;
+    text- decoration: none;
     color: #333;
     font-weight: 500;
     white-space: nowrap;
@@ -128,7 +128,7 @@
 	width: 60px;
 	height: 45px;
 	line-height: 43px;
-	font-size: 20px; 
+	font-size: 20px;
 	text-align: center;
 }
 
@@ -140,7 +140,7 @@
 
 .sub_menu{
 	display: none;
-	overflow: hidden;
+	overflo w: hidden;
 	padding-left: 0;
 	list-style: none;
 }
@@ -170,11 +170,11 @@
 	display: none;
 }
 
-@media (min-width:992px) {	
+@media (min-width:992px) {
 .vertical_nav{
 	left: 0;
 }
-	
+
 .toggle_menu {
 	display: none;
 }
@@ -187,8 +187,8 @@
 	overflow: visible;
 }
 
-.vertical_nav__minify .menu--label {
-	display: none;
+.vertical_nav__	minify .menu--label {
+	display: 	none;
 	position: absolute;
 	top: 0;
 	left: 0;

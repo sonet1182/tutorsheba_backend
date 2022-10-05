@@ -1,56 +1,82 @@
-<x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
+@extends('frontend.layouts.master')
 
-        <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
+@section('content')
+    <div class="sign_in_up_bg">
+        <div class="container">
+            <div class="row justify-content-lg-center justify-content-md-center">
+                <div class="col-lg-6 col-md-8">
+                    <div class="sign_form">
+                        <h2>Sign In</h2>
+                        <p>Log In to Your Tutorsheba Account!</p>
 
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+                        <form method="POST" action="{{ route('login') }}">
+                            @csrf
+                            <div class="ui search focus mt-15">
 
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
 
-            <!-- Email Address -->
-            <div>
-                <x-label for="email" :value="__('Email')" />
 
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+
+
+                                <div class="ui left icon input swdh95">
+                                    <input
+                                        class="prompt srch_explore text-center {{ $errors->has('email') ? ' is-invalid' : '' }}"
+                                        type="text" name="email" value="{{ old('email') }}" required autofocus
+                                        id="email" required="" maxlength="64"
+                                        placeholder="Enter Email or Phone Number..." />
+
+                                    <i class="uil uil-envelope icon icon2"></i>
+                                </div>
+                                <div class="ui left icon input swdh95">
+                                    @if ($errors->has('email'))
+                                            <span class="ui form mt-15 text-danger text-center" role="alert">
+                                                <strong>{{ $errors->first('email') }}</strong>
+                                            </span>
+                                        @endif
+                                </div>
+
+
+                            </div>
+                            <div class="ui search focus mt-15">
+                                <div class="ui left icon input swdh95">
+                                    <input
+                                        class="prompt srch_explore text-center {{ $errors->has('password') ? ' is-invalid' : '' }}"
+                                        type="password" name="password" value="" id="password" required=""
+                                        maxlength="64" placeholder="Enter Your Password..." />
+                                    <i class="uil uil-key-skeleton-alt icon icon2"></i>
+                                </div>
+                            </div>
+
+                            <div class="ui left icon input swdh95">
+                                @if ($errors->has('password'))
+                                        <span class="ui form mt-15" role="alert">
+                                            <strong>{{ $errors->first('password') }}</strong>
+                                        </span>
+                                    @endif
+                            </div>
+
+                            <div class="ui form mt-30 checkbox_sign">
+                                <div class="inline field">
+                                    <div class="ui checkbox mncheck">
+                                        <input type="checkbox" tabindex="0" class="hidden" />
+                                        <label>Remember Me</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="login-btn" type="submit">Sign In</button>
+                        </form>
+                        <p class="sgntrm145">
+                            Or <a href="forgot_password.html">Forgot Password</a>.
+                        </p>
+                        <p class="mb-0 mt-30 hvsng145">
+                            Don't have an account? <a href="sign_up.html">Sign Up</a>
+                        </p>
+                    </div>
+                    <div class="sign_footer">
+                        <img src="images/sign_logo.png" alt="" />© 2018
+                        <strong>Tutorshebsa</strong>. All Rights Reserved.
+                    </div>
+                </div>
             </div>
-
-            <!-- Password -->
-            <div class="mt-4">
-                <x-label for="password" :value="__('Password')" />
-
-                <x-input id="password" class="block mt-1 w-full"
-                                type="password"
-                                name="password"
-                                required autocomplete="current-password" />
-            </div>
-
-            <!-- Remember Me -->
-            <div class="block mt-4">
-                <label for="remember_me" class="inline-flex items-center">
-                    <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="remember">
-                    <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-                </label>
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
-                        {{ __('Forgot your password?') }}
-                    </a>
-                @endif
-
-                <x-button class="ml-3">
-                    {{ __('Log in') }}
-                </x-button>
-            </div>
-        </form>
-    </x-auth-card>
-</x-guest-layout>
+        </div>
+    </div>
+@endsection

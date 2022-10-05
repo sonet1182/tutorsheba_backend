@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g id="check-white" transform="translate(-440 -719)">
+    <rect id="Rectangle_330" data-name="Rectangle 330" class="cls-1" width="18" height="18" transform="translate(440 719)"/>
+    <path id="checked_1_" data-name="checked (1)" class="cls-2" d="M.138,8.077a.446.446,0,0,1,0-.646l.646-.646a.446.446,0,0,1,.646,0l.046.046L4.015,9.554a.223.223,0,0,0,.323,0l6.185-6.415h.046a.446.446,0,0,1,.646,0l.646.646a.446.446,0,0,1,0,.646h0L4.477,12.092a.446.446,0,0,1-.646,0L.231,8.215.138,8.077Z" transform="translate(442.996 719.75)"/>
+  </g>
+</svg>
