@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\FileUpload;
 use App\Traits\Message;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -12,4 +13,5 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
     use Message;
+    use FileUpload;
 }

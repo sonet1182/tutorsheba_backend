@@ -34,11 +34,11 @@ class TuitionRequest extends Model
 
      public function profile()
     {
-        return $this->belongsTo('App\TeacherProfile','user_id', 'user_id');
+        return $this->belongsTo('App\Models\TeacherProfile','user_id', 'user_id');
     }
 
     public function student()
     {
-        return $this->belongsTo('App\StudentProfile','student_id');
+        return $this->belongsTo('App\Models\StudentProfile','student_id');
     }
 }

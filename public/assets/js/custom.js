@@ -381,6 +381,7 @@ $(document).ready(function(){
     });
 
     $('select.districts').filter(function() {
+        alert('selina')
         var stateID = $(this).val();
         $(".selectArea").hide();
         $(".loadingImgArea").show();

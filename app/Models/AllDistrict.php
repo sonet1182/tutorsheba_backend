@@ -27,6 +27,6 @@ class AllDistrict extends Model
 
     //  public function teacher()
     // {
-    //     return $this->hasMany('App\TeacherProfile','district_id');
+    //     return $this->hasMany('App\Models\TeacherProfile','district_id');
     // }
 }

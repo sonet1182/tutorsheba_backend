@@ -35,7 +35,7 @@ class UserMembership extends Model
 
     public function tutor()
     {
-        return $this->belongsTo('App\TeacherProfile','tutor_id');
+        return $this->belongsTo('App\Models\TeacherProfile','tutor_id');
     }
 
 }

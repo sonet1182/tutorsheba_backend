@@ -28,12 +28,13 @@ class StudentProfile extends Model
     protected $fillable = [
         'title','s_fullName','s_phoneNumber','s_email','s_number',
         's_gender','s_college','s_class','s_medium','s_districts','s_area',
-        's_address','t_gender','t_subject','t_days','t_salary','ex_information','time', 'manager'
+        's_address','t_gender','t_subject','t_days','t_salary','ex_information','time', 'manager',
+        'lead_generator'
     ];
 
-     public function tuitionRequest()
+    public function tuitionRequest()
     {
-        return $this->hasOne('App\TuitionRequest','student_id');
+        return $this->hasOne('App\Models\TuitionRequest','student_id');
     }
 
     public function districts()
@@ -41,19 +42,34 @@ class StudentProfile extends Model
         return $this->belongsTo(AllDistrict::class,'s_districts');
     }
 
+    public function partner()
+    {
+        return $this->belongsTo(Partner::class,'lead_generator');
+    }
+
+    public function area()
+    {
+        return $this->belongsTo(AllArea::class,'s_area');
+    }
+
     public function assigned()
     {
-        return $this->hasMany('App\assignedTeacher','student_id');
+        return $this->hasMany('App\Models\AssignedTeacher','student_id');
     }
 
     public function confirmed()
     {
-        return $this->hasOne('App\confirmedTeacher','student_id');
+        return $this->hasOne('App\Models\confirmedTeacher','student_id');
     }
 
     public function manager_info()
     {
-        return $this->belongsTo('App\Manager','manager');
+        return $this->belongsTo('App\Models\Manager','manager');
+    }
+
+    public function txn()
+    {
+        return $this->hasOne('App\Models\Afftransaction','lead_id');
     }
 
 

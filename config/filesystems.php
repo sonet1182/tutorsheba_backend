@@ -36,6 +36,16 @@ return [
             'throw' => false,
         ],
 
+        'nid_card' => [
+            'driver' => 'local',
+            'root' => storage_path('app/nid_card'),
+        ],
+
+        'student_card' => [
+            'driver' => 'local',
+            'root' => storage_path('app/student_card'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

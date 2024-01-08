@@ -32,6 +32,6 @@ class AnyClass extends Model
      */
     public function all_media()
     {
-        return $this->belongsTo(\App\AllMedium::class, 'medium_id');
+        return $this->belongsTo(AllMedium::class, 'medium_id');
     }
 }

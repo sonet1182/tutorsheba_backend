@@ -2,38 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class Manager extends Model
+class Manager extends Authenticatable
 {
-    /**
-     * The database table used by the model.
-     *
-     * @var string
-     */
+    use HasApiTokens, HasFactory, Notifiable;
+
     protected $table = 'managers';
-
-    /**
-     * The database primary key value.
-     *
-     * @var string
-     */
     protected $primaryKey = 'id';
-
-    /**
-     * Attributes that should be mass-assignable.
-     *
-     * @var array
-     */
-    // protected $fillable = ['tutor_id','visit_count'];
-
-
     protected $guarded = [];
-
 
 
     public function tutor()
     {
-        return $this->belongsTo('App\TeacherProfile','tutor_id');
+        return $this->belongsTo('App\Models\TeacherProfile','tutor_id');
     }
 }

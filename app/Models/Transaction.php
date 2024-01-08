@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -30,7 +30,7 @@ class Transaction extends Model
 
     public function transaction()
     {
-        return $this->belongsTo('App\confirmedTeacher','confirmation_id');
+        return $this->belongsTo('App\Models\confirmedTeacher','confirmation_id');
     }
 
     public function teacher()

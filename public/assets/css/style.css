@@ -316,6 +316,10 @@ input[type=text] {
     margin-left: 240px;
   }
 
+  .admin-wrapper {
+    margin-left: 0px!important;
+  }
+
   .wrapper__minify {
     margin-left: 0;
   }

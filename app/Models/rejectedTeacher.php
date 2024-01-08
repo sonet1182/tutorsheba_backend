@@ -38,6 +38,6 @@ class rejectedTeacher extends Model
 
     public function student()
     {
-        return $this->belongsTo('App\StudentProfile','student_id');
+        return $this->belongsTo('App\Models\StudentProfile','student_id');
     }
 }

@@ -32,6 +32,6 @@ class AllArea extends Model
      */
     public function all_districts()
     {
-        return $this->belongsTo(\App\AllDistrict::class, 'district_id');
+        return $this->belongsTo(AllDistrict::class, 'district_id');
     }
 }

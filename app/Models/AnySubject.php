@@ -32,6 +32,6 @@ class AnySubject extends Model
      */
     public function any_classes()
     {
-        return $this->belongsTo(\App\AnyClass::class, 'class_id');
+        return $this->belongsTo(AnyClass::class, 'class_id');
     }
 }

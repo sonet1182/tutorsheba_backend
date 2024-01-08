@@ -14,10 +14,10 @@ class University extends Model
     protected $table = 'universities';
 
     /**
-    * The database primary key value.
-    *
-    * @var string
-    */
+     * The database primary key value.
+     *
+     * @var string
+     */
     protected $primaryKey = 'id';
 
     /**
@@ -25,7 +25,11 @@ class University extends Model
      *
      * @var array
      */
+
     protected $fillable = ['university'];
 
-
+    public function type()
+    {
+        return $this->belongsTo(Institype::class, 'type_id');
+    }
 }
