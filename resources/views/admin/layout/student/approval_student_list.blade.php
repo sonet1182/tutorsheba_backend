@@ -111,7 +111,7 @@
                                             </td>
                                             <td>{{ $student->created_at->format('h:i A | d M,Y') }}</td>
                                             <td style="width:120px">
-                                                {{ $student->approval }}
+                                                {{-- {{ $student->approval }} --}}
                                                 @if ($student->approval == 4)
                                                     <span class="badge badge-pill badge-info">Pending</span>
                                                 @elseif($student->approval == 5)

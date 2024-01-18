@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\AssignedTeacher;
 use App\Models\confirmedTeacher;
+use App\Models\Manager;
 use App\Models\Notice;
 use App\Models\rejectedTeacher;
 use App\Models\RequestTeacher;
@@ -18,6 +19,7 @@ use App\Models\User;
 use App\Models\UsersVerify;
 use App\Models\Verification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
 {
@@ -533,5 +535,78 @@ class StudentController extends Controller
                 'message' => 'Your request successfully submitted!',
             ]);
         }
+    }
+
+
+    public function tutorRequest(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            's_fullName' => 'required',
+            's_districts' => 'required',
+            's_area' => 'required',
+        ]);
+
+        // $prev_student = StudentProfile::where('approval',1)->latest()->first();
+        // $prev_manager_id = $prev_student->manager;
+        // $manager_list = Manager::where('delete_status',0)->get();
+        // $manager_max_id = $manager_list->max('id');
+        // $manager_min_id = $manager_list->min('id');
+        // if($prev_manager_id < $manager_max_id)
+        // {
+        //    $next_manager_id = $manager_list->where('id','>',$prev_manager_id)->where('delete_status',0)->first()->id;
+        // }else{
+        //     $next_manager_id = $manager_min_id;
+        // }
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 204,
+                'message' => $validator->errors(),
+            ]);
+        } else {
+            $student = new StudentProfile();
+            $student->title = 'Tutor Request By Registered Guardian Form';
+            $student->s_fullName = $request->s_fullName;
+            $student->s_phoneNumber = auth('sanctum')->user()->phoneNumber;
+            $student->s_email = $request->s_email;
+            $student->s_gender = $request->s_gender;
+            $student->s_college = $request->s_college;
+            $student->s_class = $request->s_class;
+            $student->s_medium = $request->s_medium;
+            $student->s_districts = $request->s_districts;
+            $student->s_area = $request->s_area;
+            $student->s_address = $request->s_address;
+            $student->t_gender = $request->t_gender;
+            $student->t_subject = $request->t_subject;
+            $student->t_days = $request->t_days;
+            $student->time = $request->time;
+            $student->t_salary = $request->t_salary;
+            $student->ex_information = $request->ex_info;
+            $student->s_number = $request->student_number;
+            $student->tutoring_type = $request->tutoring_type;
+            $student->student_id = auth('sanctum')->user()->id;
+            $student->save();
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Your request successfully submitted',
+                'data' => '',
+            ]);
+        }
+    }
+
+    public function postedJobs()
+    {
+        $user_id = auth('sanctum')->user()->id;
+        $includedColumns = ['id','s_fullName', 's_gender','approval'];
+        $jobs = StudentProfile::with('confirmed','assigned')->where('student_id', $user_id)
+            ->select($includedColumns)
+            ->get();
+
+        return response()->json([
+            'status' => 200,
+            'data' => $jobs,
+            'message' => 'Posted Job List',
+        ]);
     }
 }

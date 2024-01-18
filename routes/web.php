@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ApprovalStudentController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\Admin\LogoutController;
 use App\Http\Controllers\Admin\Management\PrivacyPolicyController;
 use App\Http\Controllers\Admin\Member\BalanceController;
 use App\Http\Controllers\Admin\Member\MembershipController;
@@ -66,10 +67,7 @@ Route::get('/request-for-tutor', [TeacherController::class, 'request'])->name('t
 Route::post('/tuition_request', [TeacherController::class, 'store'])->name('request.store');
 
 
-
 ////////////////////////////////////
-
-
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
@@ -342,6 +340,13 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => '/admin', 'namespace' => 
 
     Route::any('/send_text', [HomeController::class, 'send_text'])->name('admin.send_text');
     Route::post('/send_bulk_text', [HomeController::class, 'send_bulk_text'])->name('admin.send_bulk_text');
+
+    //===============Uddokta Management===================
+    Route::get('/logout_managing', [LogoutController::class, 'logoutPage'])->name('admin.logoutPage');
+    Route::get('/logout-all-admins', [LogoutController::class, 'logoutAllAdmins'])->name('admin.logoutAllAdmins');
+    Route::get('/logout-all-managers', [LogoutController::class, 'logoutAllManagers'])->name('admin.logoutAllManagers');
+    Route::get('/logout-admin/{id}', [LogoutController::class, 'logoutAdmin'])->name('admin.logoutAdmin');
+    Route::get('/logout-manager/{id}', [LogoutController::class, 'logoutManager'])->name('admin.logoutManager');
 
 
     //===============Uddokta Management===================

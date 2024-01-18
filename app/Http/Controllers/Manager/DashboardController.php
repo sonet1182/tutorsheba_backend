@@ -24,7 +24,7 @@ class DashboardController extends Controller
         $allArea = AllArea::all();
         $allMedium = AllMedium::all();
         $anyClass = AnyClass::all();
-        $anySubject = AnySubject::orderBy('subjectName','asc')->get();
+        $anySubject = AnySubject::orderBy('subjectName', 'asc')->get();
         $tutor = TeacherProfile::count();
         $student = StudentProfile::count();
         $uddokta = Partner::count();
@@ -36,26 +36,28 @@ class DashboardController extends Controller
         $studyTypes = Studytype::orderBy('name', 'ASC')->get();
 
 
-        $approval_studentProfile = StudentProfile::where('student_profile.approval' ,'=', 1)
-            ->orWhere('student_profile.approval' ,'=', 4)
-            ->orWhere('student_profile.approval' ,'=', 5)->count();
+        $approval_studentProfile = StudentProfile::where('student_profile.approval', '=', 1)
+            ->orWhere('student_profile.approval', '=', 4)
+            ->orWhere('student_profile.approval', '=', 5)->count();
 
-       return view('manager.pages.dashboard',
-           [
-           'tutor'=> $tutor,
-           'student'=> $student,
-           'uddokta'=> $uddokta,
-           'tutorRequest'=> $tutorRequest,
-           'approval_studentProfile' => $approval_studentProfile,
-           'instiTypes' => $instiTypes,
-           'universities' => $universities,
-           'studyTypes' => $studyTypes,
-           'studentRequest'=> $studentRequest,
-            'allDistrict'=>$allDistrict,
-               'allArea'=>$allArea,
-               'allMedium'=>$allMedium,
-               'anyClass'=>$anyClass,
-               'anySubject'=>$anySubject,
-           ]);
+        return view(
+            'manager.pages.dashboard',
+            [
+                'tutor' => $tutor,
+                'student' => $student,
+                'uddokta' => $uddokta,
+                'tutorRequest' => $tutorRequest,
+                'approval_studentProfile' => $approval_studentProfile,
+                'instiTypes' => $instiTypes,
+                'universities' => $universities,
+                'studyTypes' => $studyTypes,
+                'studentRequest' => $studentRequest,
+                'allDistrict' => $allDistrict,
+                'allArea' => $allArea,
+                'allMedium' => $allMedium,
+                'anyClass' => $anyClass,
+                'anySubject' => $anySubject,
+            ]
+        );
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -11,27 +12,78 @@ class LoginController extends Controller
 {
     public function showLoginForm()
     {
-        if (Auth::guard('admin')->check()) {
+        if (Auth::guard('admin')->check() && Auth::guard('admin')->user()->logged_in == 1) {
             return redirect('/admin/dashboard');
         }
         return view('auth.Admin.login');
     }
 
-    public function Login(Request $request)
+    // public function Login(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'required',
+    //         'password' => 'required|min:6'
+    //     ]);
+
+    //     if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)){
+    //         return redirect('/admin/dashboard');
+    //     }
+    //     return back()->withErrors(['email' => 'Invalid credentials. Please try again.']);
+    // }
+
+
+    public function login(Request $request)
     {
         $request->validate([
             'email' => 'required',
-            'password' => 'required|min:6'
+            'password' => 'required|min:6',
         ]);
 
-        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)){
+        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
+            $user = Auth::guard('admin')->user();
+
+            $user->update([
+                'logged_in' => 1,
+                'last_sign_in_at' => Carbon::now(),
+            ]);
+
+            $trustedIps = config('custom.trusted_ips');
+            $userIp = $request->ip();
+
+            if (!in_array($userIp, $trustedIps)) {
+                $message = 'Login attempt in Admi Panel from ' . $userIp . ' - Tutor Sheba';
+                $this->sendTextNotification($message);
+            }
             return redirect('/admin/dashboard');
         }
+
         return back()->withErrors(['email' => 'Invalid credentials. Please try again.']);
+    }
+
+    public function sendTextNotification($message)
+    {
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.sms.net.bd/sendsms',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array(
+                'api_key' => '2dYuSnQNkQUUahkgg5f4EkMC414CIm0Kp7H0m1qH',
+                'msg' => $message,
+                'to' => '01722575388',
+            ),
+        ));
+        $response = curl_exec($curl);
+
+        curl_close($curl);
     }
 
     public function destroy(Request $request)
     {
+        $user = Auth::guard('admin')->user();
+        $user->update(['logged_in' => 0]);
+
         Auth::guard('admin')->logout();
 
         $request->session()->invalidate();

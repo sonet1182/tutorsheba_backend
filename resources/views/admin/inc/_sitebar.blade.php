@@ -174,6 +174,11 @@
                         <span class="nav-label">Add Tuition Manager</span>
                     </a>
                 </li>
+                <li class="{{ Request::url() == url('/admin/logout_managing') ? 'active' : null }}">
+                    <a href="{{ url('admin/logout_managing') }}"><i class="sidebar-item-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="nav-label">Logout Managing</span>
+                    </a>
+                </li>
 
 
                 <li class="heading">UDDOKTA MANAGEMENT</li>
