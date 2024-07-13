@@ -46,6 +46,9 @@
                                                 @if ($student->partner)
                                                     <br><a href="{{ url('admin/uddokta_details/' . $student->partner->id) }}" class="badge badge-pill badge-info">{{ $student->partner->name }}</a>
                                                 @endif
+                                                @if ($student->guardian)
+                                                    <br><a href="{{ url('admin/registered-student/details/' . $student->guardian->id) }}" class="badge badge-pill badge-success">{{ $student->guardian->name }}</a>
+                                                @endif
                                             </td>
                                             <td>{{ $student->s_phoneNumber }}</td>
                                             <td>{{ $student->s_college }} / {{ $student->t_subject }}</td>

@@ -11,6 +11,7 @@ use App\Models\AnySubject;
 use App\Models\AssignedTeacher;
 use App\Models\confirmedTeacher;
 use App\Models\rejectedTeacher;
+use App\Models\Review;
 use App\Models\TeacherProfile;
 use App\Models\TuitionRequest;
 use Illuminate\Http\Request;
@@ -28,7 +29,9 @@ class SearchController extends Controller
         $confirmed = confirmedTeacher::where('teacher_id', $teacherDetails->user_id)->count();
         $cancelled = rejectedTeacher::where('teacher_id', $teacherDetails->user_id)->count();
 
-        return view('manager.pages.teacher.teacher_details',compact('teacherDetails','applied','assigned','confirmed','cancelled'));
+        $review_data = Review::where('tutor_id', $teacherDetails->user_id)->with('student')->get();
+
+        return view('manager.pages.teacher.teacher_details',compact('teacherDetails','applied','assigned','confirmed','cancelled','review_data'));
         } else {
             return redirect(url()->previous() . '#alart')->with('AlertErrorMessage', 'Tutor Name not found.');
         }
@@ -45,7 +48,9 @@ class SearchController extends Controller
         $confirmed = confirmedTeacher::where('teacher_id', $teacherDetails->user_id)->count();
         $cancelled = rejectedTeacher::where('teacher_id', $teacherDetails->user_id)->count();
 
-        return view('manager.pages.teacher.teacher_details',compact('teacherDetails','applied','assigned','confirmed','cancelled'));
+        $review_data = Review::where('tutor_id', $teacherDetails->user_id)->with('student')->get();
+
+        return view('manager.pages.teacher.teacher_details',compact('teacherDetails','applied','assigned','confirmed','cancelled','review_data'));
         } else {
             return redirect(url()->previous() . '#alart')->with('AlertErrorMessage', 'Institution not found.');
         }
@@ -59,7 +64,9 @@ class SearchController extends Controller
         $confirmed = confirmedTeacher::where('teacher_id', $teacherDetails->user_id)->count();
         $cancelled = rejectedTeacher::where('teacher_id', $teacherDetails->user_id)->count();
 
-        return view('manager.pages.teacher.teacher_details',compact('teacherDetails','applied','assigned','confirmed','cancelled'));
+        $review_data = Review::where('tutor_id', $teacherDetails->user_id)->with('student')->get();
+
+        return view('manager.pages.teacher.teacher_details',compact('teacherDetails','applied','assigned','confirmed','cancelled','review_data'));
         } else {
             return redirect(url()->previous() . '#alart1')->with('AlertErrorMessage1', 'Teacher ID not found.');
         }
@@ -77,7 +84,9 @@ class SearchController extends Controller
         $confirmed = confirmedTeacher::where('teacher_id', $teacherDetails->user_id)->count();
         $cancelled = rejectedTeacher::where('teacher_id', $teacherDetails->user_id)->count();
 
-        return view('manager.pages.teacher.teacher_details',compact('teacherDetails','applied','assigned','confirmed','cancelled'));
+        $review_data = Review::where('tutor_id', $teacherDetails->user_id)->with('student')->get();
+
+        return view('manager.pages.teacher.teacher_details',compact('teacherDetails','applied','assigned','confirmed','cancelled','review_data'));
         } else {
             return redirect(url()->previous() . '#alart1')->with('AlertErrorMessage1', 'Phone Number not found.');
         }
@@ -94,7 +103,9 @@ class SearchController extends Controller
         $confirmed = confirmedTeacher::where('teacher_id', $teacherDetails->user_id)->count();
         $cancelled = rejectedTeacher::where('teacher_id', $teacherDetails->user_id)->count();
 
-        return view('manager.pages.teacher.teacher_details',compact('teacherDetails','applied','assigned','confirmed','cancelled'));
+        $review_data = Review::where('tutor_id', $teacherDetails->user_id)->with('student')->get();
+
+        return view('manager.pages.teacher.teacher_details',compact('teacherDetails','applied','assigned','confirmed','cancelled','review_data'));
         } else {
             return redirect(url()->previous() . '#alart2')->with('AlertErrorMessage2', 'Email Address not found.');
         }

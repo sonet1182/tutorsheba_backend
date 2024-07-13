@@ -60,6 +60,11 @@ Route::group(['middleware' => ['isManager'], 'prefix' => '/manager', 'as' => 'ma
     Route::get('set_student_pending/{id}', [StudentRequestController::class, 'setPending']);
     Route::get('set_student_cancel/{id}', [StudentRequestController::class, 'setCancel']);
     Route::get('student_details{id}', [StudentRequestController::class, 'StudentDetails']);
+
+    Route::get('registered-student', [StudentRequestController::class, 'registered_student']);
+    Route::get('registered-student/details/{id}', [StudentRequestController::class, 'registered_student_details']);
+
+
     Route::post('/find_teacher', [StudentRequestController::class, 'find_teacher'])->name('find_teacher');
     Route::post('/assign_teacher', [StudentRequestController::class, 'assign_teacher'])->name('assign_teacher');
     Route::post('/confirm_teacher', [StudentRequestController::class, 'confirm_teacher'])->name('confirm_teacher');
@@ -98,4 +103,7 @@ Route::group(['middleware' => ['isManager'], 'prefix' => '/manager', 'as' => 'ma
 
     Route::any('/send_text', [MessageController::class, 'send_text'])->name('admin.send_text');
     Route::post('/send_bulk_text', [MessageController::class, 'send_bulk_text'])->name('admin.send_bulk_text');
+
+
+
 });

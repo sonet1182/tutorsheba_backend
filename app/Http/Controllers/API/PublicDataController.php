@@ -22,6 +22,7 @@ use App\Models\University;
 use App\Models\User;
 use App\Models\UserMembership;
 use App\Models\PrivacyPolicyData;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -41,8 +42,8 @@ class PublicDataController extends Controller
     public function statistics()
     {
         $total_request = TuitionRequest::count();
-        $total_tutor = TeacherProfile::count();
-        $total_tuition = StudentProfile::where('approval',1)->count();
+        $total_tutor = TeacherProfile::latest()->first()->id;
+        $total_tuition = StudentProfile::where('approval', 1)->count();
 
         return response()->json([
             'status' => 200,
@@ -212,65 +213,93 @@ class PublicDataController extends Controller
     }
 
     public function tutor_details($id)
-{
-    $details = TeacherProfile::with('districts', 'owndistricts', 'studytype')
-        ->join('users', 'teacher_profile.user_id', '=', 'users.id')
-        ->select(
-            'teacher_profile.teacher_profile_picture as teacher_profile_picture',
-            'teacher_profile.teacher_id as teacher_id',
-            'teacher_profile.user_id as user_id',
-            'teacher_profile.district_id as district_id',
-            'teacher_profile.honours_study_type as honours_study_type',
-            'teacher_profile.honours_institute as honours_institute',
-            'teacher_profile.teacher_present_city as teacher_present_city',
-            'teacher_profile.teacher_university as teacher_university',
-            'teacher_profile.honours_subject as honours_subject',
-            'teacher_profile.teacher_subject as teacher_subject',
-            'teacher_profile.teacher_gender as teacher_gender',
-            'teacher_profile.tuition_salary as tuition_salary',
-            'teacher_profile.tuition_days as tuition_days',
-            'teacher_profile.tuition_style as tuition_style',
-            'teacher_profile.tuition_medium as tuition_medium',
-            'teacher_profile.tuition_class as tuition_class',
-            'teacher_profile.tuition_subject as tuition_subject',
-            'teacher_profile.tuition_shift as tuition_shift',
-            'teacher_profile.ssc_year as ssc_year',
-            'teacher_profile.ssc_institute as ssc_institute',
-            'teacher_profile.ssc_group as ssc_group',
-            'teacher_profile.ssc_gpa as ssc_gpa',
-            'teacher_profile.hsc_year as hsc_year',
-            'teacher_profile.hsc_institute as hsc_institute',
-            'teacher_profile.hsc_group as hsc_group',
-            'teacher_profile.hsc_gpa as hsc_gpa',
-            'teacher_profile.honours_year as honours_year',
-            'teacher_profile.honours_institute as honours_institute',
-            'teacher_profile.honours_subject as honours_subject',
-            'teacher_profile.honours_gpa as honours_gpa',
-            'teacher_profile.tuition_area as tuition_area',
-            'teacher_profile.teacher_present_address as teacher_present_address',
-            'users.name as name',
-            'users.verified as verified',
-            'users.views as views',
-            'users.created_at as created_at',
-            'users.updated_at as updated_at'
-        )
-        ->where('teacher_id', $id)
-        ->first();
+    {
+        $details = TeacherProfile::with('districts', 'owndistricts', 'studytype')
+            ->join('users', 'teacher_profile.user_id', '=', 'users.id')
+            ->select(
+                'teacher_profile.teacher_profile_picture as teacher_profile_picture',
+                'teacher_profile.teacher_id as teacher_id',
+                'teacher_profile.user_id as user_id',
+                'teacher_profile.district_id as district_id',
+                'teacher_profile.honours_study_type as honours_study_type',
+                'teacher_profile.honours_institute as honours_institute',
+                'teacher_profile.teacher_present_city as teacher_present_city',
+                'teacher_profile.teacher_university as teacher_university',
+                'teacher_profile.honours_subject as honours_subject',
+                'teacher_profile.teacher_subject as teacher_subject',
+                'teacher_profile.teacher_gender as teacher_gender',
+                'teacher_profile.tuition_salary as tuition_salary',
+                'teacher_profile.tuition_days as tuition_days',
+                'teacher_profile.tuition_style as tuition_style',
+                'teacher_profile.tuition_medium as tuition_medium',
+                'teacher_profile.tuition_class as tuition_class',
+                'teacher_profile.tuition_subject as tuition_subject',
+                'teacher_profile.tuition_shift as tuition_shift',
+                'teacher_profile.ssc_year as ssc_year',
+                'teacher_profile.ssc_institute as ssc_institute',
+                'teacher_profile.ssc_group as ssc_group',
+                'teacher_profile.ssc_gpa as ssc_gpa',
+                'teacher_profile.hsc_year as hsc_year',
+                'teacher_profile.hsc_institute as hsc_institute',
+                'teacher_profile.hsc_group as hsc_group',
+                'teacher_profile.hsc_gpa as hsc_gpa',
+                'teacher_profile.honours_year as honours_year',
+                'teacher_profile.honours_institute as honours_institute',
+                'teacher_profile.honours_subject as honours_subject',
+                'teacher_profile.honours_gpa as honours_gpa',
+                'teacher_profile.tuition_area as tuition_area',
+                'teacher_profile.tuition_experience as tuition_experience',
+                'teacher_profile.teacher_present_address as teacher_present_address',
+                'users.name as name',
+                'users.verified as verified',
+                'users.views as views',
+                'users.created_at as created_at',
+                'users.updated_at as updated_at'
+            )
+            ->where('teacher_id', $id)
+            ->first();
 
         $teacher = User::find($details->user_id);
         $teacher->views = $teacher->views + 1;
         $teacher->update();
 
-    return response()->json([
-        'status' => 200,
-        'data' => $details,
-    ]);
-}
+        $review_data = Review::with('student')->where('tutor_id', $details->user_id)->latest()->get();
+
+        // Calculate the average rating for the specified tutor
+        $averageRating = Review::where('tutor_id', $details->user_id)
+            ->avg('rating');
+
+        // Format the average rating to 2 decimal places
+        $averageRating = number_format($averageRating, 2);
+
+        // Count the number of reviews for each specific rating
+        $ratingsCount = Review::where('tutor_id', $details->user_id)
+            ->selectRaw('rating, COUNT(*) as count')
+            ->groupBy('rating')
+            ->pluck('count', 'rating');
+
+        // Ensure all ratings (1 through 5) are represented
+        $ratingsCount = [
+            1 => $ratingsCount->get(1, 0),
+            2 => $ratingsCount->get(2, 0),
+            3 => $ratingsCount->get(3, 0),
+            4 => $ratingsCount->get(4, 0),
+            5 => $ratingsCount->get(5, 0),
+        ];
+
+        return response()->json([
+            'status' => 200,
+            'data' => $details,
+            'review_data' => $review_data,
+            'averageRating' => $averageRating,
+            'ratingsCount' => $ratingsCount,
+        ]);
+    }
 
     public function random_popular_tutor()
     {
         $tutors = TeacherProfile::with('districts')
-        ->join('users', 'teacher_profile.user_id', '=', 'users.id')
+            ->join('users', 'teacher_profile.user_id', '=', 'users.id')
             ->select(
                 'teacher_profile.teacher_profile_picture as teacher_profile_picture',
                 'teacher_profile.teacher_id as teacher_id',

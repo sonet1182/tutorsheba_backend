@@ -38,36 +38,67 @@ class TutorController extends Controller
     public function update_documents(Request $request)
     {
         $request->validate([
+            'doc' => 'required',
             'nid_card' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:300',
-            'student_card' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:300',
         ]);
 
         $userV = UsersVerify::where('user_id', auth('sanctum')->user()->id)->first();
 
         if (!isset($userV)) {
-            $imageUrl1 = $this->UploadDocImage($request, 'nid_card', 'nid_card/', '380', '250');
-            $imageUrl2 = $this->UploadDocImage($request, 'student_card', 'student_card/', '380', '250');
-
-            $verify = new UsersVerify();
-            $verify->user_id = auth('sanctum')->user()->id;
-            $verify->nid_card = $imageUrl1;
-            $verify->student_card = $imageUrl2;
-            $verify->save();
-        } else {
-            if (!isset($userV->nid_card)) {
-                $imageUrl1 = $this->UploadDocImage($request, 'nid_card', 'nid_card/', '380', '250', $userV->nid_card);
-                $userV->update([
-                    'nid_card' => $imageUrl1,
-                ]);
-            }
-
-            if (!isset($userV->student_card)) {
-                $imageUrl2 = $this->UploadDocImage($request, 'student_card', 'student_card/', '380', '250', $userV->student_card);
-                $userV->update([
-                    'student_card' => $imageUrl2,
-                ]);
-            }
+            $userV = new UsersVerify();
+            $userV->user_id = auth('sanctum')->user()->id;
+            $userV->save();
         }
+
+        if ($request->doc == 'nid') {
+            $imageUrl1 = $this->UploadDocImage($request, 'nid_card', 'nid_card/', '380', '250', $userV->nid_card);
+            $userV->update([
+                'nid_card' => $imageUrl1,
+            ]);
+        }
+        if ($request->doc == 'uid') {
+            $imageUrl1 = $this->UploadDocImage($request, 'nid_card', 'student_card/', '380', '250', $userV->nid_card);
+            $userV->update([
+                'student_card' => $imageUrl1,
+            ]);
+        }
+        if ($request->doc == 'ssc') {
+            $imageUrl1 = $this->UploadDocImage($request, 'nid_card', 'ssc_cft/', '380', '250', $userV->nid_card);
+            $userV->update([
+                'ssc_cft' => $imageUrl1,
+            ]);
+        }
+        if ($request->doc == 'hsc') {
+            $imageUrl1 = $this->UploadDocImage($request, 'nid_card', 'hsc_cft/', '380', '250', $userV->nid_card);
+            $userV->update([
+                'hsc_cft' => $imageUrl1,
+            ]);
+        }
+
+        // if (!isset($userV)) {
+        //     $imageUrl1 = $this->UploadDocImage($request, 'nid_card', 'nid_card/', '380', '250');
+        //     $imageUrl2 = $this->UploadDocImage($request, 'student_card', 'student_card/', '380', '250');
+
+        //     $verify = new UsersVerify();
+        //     $verify->user_id = auth('sanctum')->user()->id;
+        //     $verify->nid_card = $imageUrl1;
+        //     $verify->student_card = $imageUrl2;
+        //     $verify->save();
+        // } else {
+        //     if (!isset($userV->nid_card)) {
+        //         $imageUrl1 = $this->UploadDocImage($request, 'nid_card', 'nid_card/', '380', '250', $userV->nid_card);
+        //         $userV->update([
+        //             'nid_card' => $imageUrl1,
+        //         ]);
+        //     }
+
+        //     if (!isset($userV->student_card)) {
+        //         $imageUrl2 = $this->UploadDocImage($request, 'student_card', 'student_card/', '380', '250', $userV->student_card);
+        //         $userV->update([
+        //             'student_card' => $imageUrl2,
+        //         ]);
+        //     }
+        // }
 
         $teacher = TeacherProfile::where('user_id', auth('sanctum')->user()->id)->first();
 
@@ -76,6 +107,7 @@ class TutorController extends Controller
         ]);
 
         return response()->json([
+            'ss'=> $request->all(),
             'status' => 200,
             'message' => 'Profile Updated'
         ]);
@@ -85,15 +117,12 @@ class TutorController extends Controller
     {
         $user_id = auth('sanctum')->user()->id;
         $user = User::find($user_id);
-        $teacher = TeacherProfile::where('user_id', $user->id)->first();
-
         $user->name = $request->teacher_name;
         $user->update();
 
-        $imageUrl = $this->UploadImage($request, 'image', 'images/', '300', '300', $teacher->teacher_profile_picture);
+        $teacher = TeacherProfile::where('user_id', $user->id)->first();
 
-
-        $teacher = tap($teacher)->update([
+        $teacher->update([
             'teacher_name' => $request->teacher_name,
             'a_phone_number' => $request->a_phone_number,
             'teacher_gender' => $request->teacher_gender,
@@ -105,7 +134,6 @@ class TutorController extends Controller
             'teacher_present_address' => $request->teacher_present_address,
             'teacher_permanent_address' => $request->teacher_permanent_address,
             'about_yourself' => $request->about_yourself,
-            'teacher_profile_picture' => $imageUrl,
             'teacher_present_city' => $request->teacher_present_city,
             'a_phone_number' => $request->a_phone_number,
             'ex_phone_one' => $request->ex_phone_one,

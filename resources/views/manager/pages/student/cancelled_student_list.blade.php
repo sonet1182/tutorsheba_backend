@@ -85,6 +85,9 @@
                                             @if ($student->partner)
                                                     <br><span class="badge badge-pill badge-info">{{ $student->partner->name }}</span>
                                                 @endif
+                                                @if ($student->guardian)
+                                                    <br><a href="{{ url('manager/registered-student/details/' . $student->guardian->id) }}" class="badge badge-pill badge-success">{{ $student->guardian->name }}</a>
+                                                @endif
                                         </td>
                                         <td>{{ $student->s_phoneNumber }}</td>
                                         <td style="width: 140px">{{ $student->districts ? $student->districts->districtName : '' }}, {{ $student->s_area }} , {{ $student->s_address }}</td>

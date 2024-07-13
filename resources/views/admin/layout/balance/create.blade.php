@@ -24,27 +24,27 @@
 
                     </div>
                     <div class="card-body">
-                        {!! Form::open(['url' => '/admin/balance/store/'.$tutor->id,'method'=>'POST', 'class'=>'well form-horizontal']) !!}
-
-                        <div class="form-group {{ $errors->has('balance') ? ' has-error' : '' }}">
-                            <label class="control-label col-sm-3 col-xs-12">Add Balance Amount</label>
-                            <div class="controls col-sm-12 col-xs-12">
-                                <input type="text" class="form-control" name="balance" value="{{ !empty($tutor->balance) ? $tutor->balance : '0' }}" placeholder="balance">
-                                @if ($errors->has('balance'))
-                                    <span class="help-block">
-                             <strong>{{ $errors->first('balance') }}</strong>
-                             </span>
-                                @endif
+                        <form action="{{ url('/admin/balance/store/'.$tutor->id) }}" method="POST" class="well form-horizontal">
+                            @csrf
+                            <div class="form-group {{ $errors->has('balance') ? ' has-error' : '' }}">
+                                <label class="control-label col-sm-3 col-xs-12">Add Balance Amount</label>
+                                <div class="controls col-sm-12 col-xs-12">
+                                    <input type="text" class="form-control" name="balance" value="{{ old('balance', $tutor->balance ?? '0') }}" placeholder="balance">
+                                    @if ($errors->has('balance'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('balance') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="text-right">
-                            <button type="submit" class="btn btn-lg btn-success">Save</button>
-                        </div>
-                        {!!  FORM::close() !!}
-                        </div>
+                            <div class="text-right">
+                                <button type="submit" class="btn btn-lg btn-success">Save</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 @endsection

@@ -125,8 +125,13 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => '/admin', 'namespace' => 
     Route::get('student_approval{id}', [ApprovalStudentController::class, 'StudentApproval']);
     Route::get('student_rejected{id}', [ApprovalStudentController::class, 'StudentRejected']);
 
-
     Route::get('student_details{id}', [StudentRequestController::class, 'StudentDetails']);
+
+
+    Route::get('registered-student', [StudentRequestController::class, 'registered_student']);
+    Route::get('registered-student/details/{id}', [StudentRequestController::class, 'registered_student_details']);
+
+
 
     Route::any('tuition_search_by_id', [StudentRequestController::class, 'tuition_search_by_id']);
     Route::any('tuition_search_by_phone', [StudentRequestController::class, 'tuition_search_by_phone']);
@@ -331,6 +336,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => '/admin', 'namespace' => 
     Route::get('/admin-delete/{id}', [AdminUserController::class, 'adminDelete'])->name('adminDelete');
     Route::get('/tutor-list', [AdminUserController::class, 'tutorlist'])->name('tutorlist');
     Route::get('/tutor-list/delete/{id}', [AdminUserController::class, 'tutorDelete'])->name('tutorlist.delete');
+
+    Route::post('/tutor/submit_review', [AdminUserController::class, 'submit_review'])->name('submit_review');
 
     Route::get('/privacy-policy', [PrivacyPolicyController::class, 'create'])->name('create');
     Route::post('/privacy-policy/update/{id}', [privacyPolicyController::class, 'update'])->name('update');

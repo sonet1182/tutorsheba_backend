@@ -47,6 +47,11 @@ class StudentProfile extends Model
         return $this->belongsTo(Partner::class,'lead_generator');
     }
 
+    public function guardian()
+    {
+        return $this->belongsTo(Student::class,'student_id');
+    }
+
     public function area()
     {
         return $this->belongsTo(AllArea::class,'s_area');
@@ -60,6 +65,18 @@ class StudentProfile extends Model
     public function confirmed()
     {
         return $this->hasOne('App\Models\confirmedTeacher','student_id');
+    }
+
+    public function confirmedtutor()
+    {
+        return $this->hasOneThrough(
+            'App\Models\TeacherProfile', 
+            'App\Models\confirmedTeacher', 
+            'student_id',  // Foreign key on Confirmed table
+            'user_id',          // Foreign key on TutorProfile table
+            'id',          // Local key on StudentProfile table
+            'teacher_id'   // Local key on Confirmed table
+        );
     }
 
     public function manager_info()

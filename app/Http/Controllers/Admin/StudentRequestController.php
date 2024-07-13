@@ -8,6 +8,7 @@ use App\Models\confirmedTeacher;
 use App\Models\Manager;
 use App\Models\Partner;
 use App\Models\rejectedTeacher;
+use App\Models\Student;
 use App\Models\StudentProfile;
 use App\Models\TeacherProfile;
 use App\Models\Transaction;
@@ -238,13 +239,6 @@ class StudentRequestController extends Controller
             return view('admin.layout.student.ajax_teacher_profile', compact('teacher', 'student_id', 'confirmed'));
         else
             return 'Teacher Not Found!';
-
-
-        // return response()->json([
-        //             'type' => 'success',
-        //             'data' => $teacher,
-        //             'message' => 'Admin Added Successfully'
-        //         ]);
     }
 
     public function assign_teacher(Request $req)
@@ -579,5 +573,26 @@ class StudentRequestController extends Controller
         $tuition->approval = 3;
         $tuition->save();
         return redirect()->back()->with('rej', 'This Tuition Account Rejected');
+    }
+
+
+
+
+    public function registered_student()
+    {
+        $studentProfile = Student::latest()->get();
+
+        return view('admin.layout.registered_student.list', compact('studentProfile'));
+    }
+
+
+    public function registered_student_details($id)
+    {
+        $student = Student::findOrFail($id);
+        $studentProfile = StudentProfile::with('manager_info')->where('student_id', $student->id)
+        ->orderBy('id', 'DESC')
+        ->paginate(20);
+
+        return view('admin.layout.registered_student.details', compact('student','studentProfile'));
     }
 }

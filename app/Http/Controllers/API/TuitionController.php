@@ -10,16 +10,12 @@ use App\Models\StudentProfile;
 use App\Models\TeacherProfile;
 use App\Models\TuitionRequest;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Auth;
 
 class TuitionController extends Controller
 {
     public function tuition_list(Request $request, $limit)
     {
-        // $data = StudentProfile::with('districts')
-        //     ->where('approval', 1)->latest()->paginate($limit);
-
+        $id = $request->id;
         $districts = $request->district;
         $tuition_area = $request->area ? AllArea::find($request->area)->areaName : null;
         $tuition_medium = $request->medium ? AllMedium::find($request->medium)->mediumName : null;
@@ -27,8 +23,10 @@ class TuitionController extends Controller
         $tuition_subject = $request->subject;
         $teacher_gender = $request->gender;
         $tutoring_type = $request->type;
+        $start = $request->start;
+        $end = $request->end;
 
-        $quary = StudentProfile::with('districts', 'assigned')
+        $query = StudentProfile::with('districts', 'assigned')
             ->select(
                 'student_profile.id as id',
                 'student_profile.s_districts as s_districts',
@@ -39,50 +37,67 @@ class TuitionController extends Controller
                 'student_profile.s_medium as s_medium',
                 'student_profile.s_class as s_class',
                 'student_profile.t_subject as t_subject',
+                'student_profile.t_gender as t_gender',
                 'student_profile.s_medium as s_medium',
                 'student_profile.t_salary as t_salary',
+                'student_profile.s_number as s_number',
+                'student_profile.t_days as t_days',
                 'student_profile.ex_information as ex_information',
                 'student_profile.approval as approval',
+                'student_profile.created_at as created_at',
             )
             ->where('approval', 1);
 
+        if (!empty($id)) {
+            $query->where('id', 'like', '%' . $id . '%');
+        }
 
         if (!empty($districts)) {
-            $quary->where('s_districts', $districts);
+            $query->where('s_districts', $districts);
         }
 
         if (!empty($tuition_area)) {
-            $quary->where('s_area', $tuition_area);
+            $query->where('s_area', $tuition_area);
         }
 
         if (!empty($tuition_medium)) {
-            $quary->where('s_medium', $tuition_medium);
+            $query->where('s_medium', $tuition_medium);
         }
 
         if (!empty($tuition_class)) {
-            $quary->where('s_class', $tuition_class);
+            $query->where('s_class', $tuition_class);
         }
 
         if (!empty($tuition_subject)) {
-            $quary->where('s_subject', $tuition_subject);
+            $query->where('s_subject', $tuition_subject);
         }
 
         if (!empty($teacher_gender)) {
-            $quary->where('t_gender', $teacher_gender);
+            $query->where('t_gender', $teacher_gender);
         }
 
         if (!empty($tutoring_type)) {
-            $quary->where('tutoring_type', '=', $tutoring_type);
+            $query->where('tutoring_type', '=', $tutoring_type);
         }
 
-        $alltuitions = $quary->latest()->paginate($limit);
+        if (!empty($start)) {
+            $query->whereDate('created_at', '>=', $start);
+            if (!empty($end)) {
+                $query->whereDate('created_at', '<=', $end);
+            }
+        } elseif (!empty($end)) {
+            // If only end date is provided, fetch data up to the end date
+            $query->whereDate('created_at', '<=', $end);
+        }
 
+        $alltuitions = $query->latest()->paginate($limit);
 
         return response()->json([
             'status' => 200,
             'data' => $alltuitions,
         ]);
     }
+
 
     public function tuitionView($id)
     {
@@ -117,7 +132,9 @@ class TuitionController extends Controller
                 'student_profile.approval as approval',
                 'student_profile.s_gender as s_gender',
                 'student_profile.t_gender as t_gender',
+                'student_profile.s_number as s_number',
                 'student_profile.time as time',
+                'student_profile.time_duration as time_duration',
                 'student_profile.t_days as t_days'
             )->with('districts', 'assigned')->first();
 
@@ -166,6 +183,7 @@ class TuitionController extends Controller
                     'student_profile.t_subject as t_subject',
                     'student_profile.s_medium as s_medium',
                     'student_profile.t_salary as t_salary',
+                    'student_profile.t_days as t_days',
                     'student_profile.ex_information as ex_information',
                     'student_profile.approval as approval'
                 )

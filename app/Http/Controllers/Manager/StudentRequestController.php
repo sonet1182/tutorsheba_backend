@@ -8,6 +8,7 @@ use App\Models\confirmedTeacher;
 use App\Models\Manager;
 use App\Models\Partner;
 use App\Models\rejectedTeacher;
+use App\Models\Student;
 use App\Models\StudentProfile;
 use App\Models\TeacherProfile;
 use App\Models\Transaction;
@@ -603,5 +604,24 @@ class StudentRequestController extends Controller
         $status = 'Rejected';
 
         return view('manager.pages.teacher.job_list',compact('studentinfo','status'));
+    }
+
+
+    public function registered_student()
+    {
+        $studentProfile = Student::latest()->get();
+
+        return view('manager.pages.registered_student.list', compact('studentProfile'));
+    }
+
+
+    public function registered_student_details($id)
+    {
+        $student = Student::findOrFail($id);
+        $studentProfile = StudentProfile::with('manager_info')->where('student_id', $student->id)
+        ->orderBy('id', 'DESC')
+        ->paginate(20);
+
+        return view('manager.pages.registered_student.details', compact('student','studentProfile'));
     }
 }

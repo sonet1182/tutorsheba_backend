@@ -48,10 +48,11 @@ class MessageController extends Controller
     {
         $users = $req->all_option;
         $message = $req->input('message');
-        $to = implode(',', $users);
 
         $curl = curl_init();
 
+        // Iterate over each user ID
+        foreach ($users as $user_phone) {
             curl_setopt_array($curl, array(
                 CURLOPT_URL => 'https://api.sms.net.bd/sendsms',
                 CURLOPT_RETURNTRANSFER => true,
@@ -59,14 +60,14 @@ class MessageController extends Controller
                 CURLOPT_POSTFIELDS => array(
                     'api_key' => '2dYuSnQNkQUUahkgg5f4EkMC414CIm0Kp7H0m1qH',
                     'msg' => $message." - Tutor Sheba",
-                    'to' => $to,
+                    'to' => $user_phone
                 ),
             ));
-
             $response = curl_exec($curl);
+        }
 
-            curl_close($curl);
+        curl_close($curl);
 
-            return back()->with('message', 'Your message has been send!');
+        return ("Your messages have been sent to all selected users!");
     }
 }

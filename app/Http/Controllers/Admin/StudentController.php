@@ -92,8 +92,6 @@ class StudentController extends Controller
         }
 
 
-
-
         $student = new StudentProfile();
         $student->title = $request->title;
         $student->s_fullName = $request->s_fullName;
@@ -110,6 +108,7 @@ class StudentController extends Controller
         $student->t_subject = $t_subject;
         $student->t_days = $request->t_days;
         $student->time = $request->time;
+        $student->time_duration = $request->time_duration;
         $student->t_salary = $request->t_salary;
         $student->ex_information = $request->ex_info;
         $student->s_number = $request->student_number;

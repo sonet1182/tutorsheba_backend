@@ -4,6 +4,7 @@
 
 @section('content')
 
+
     <div class="page-heading">
         <h1 class="page-title">Tutor ID# {{ $teacherDetails->teacher_id }}</h1>
         <ol class="breadcrumb">
@@ -38,7 +39,7 @@
                         <div class="row">
                             <div class="col-md-4 col-lg-4 " align="center"> <img alt="User Pic"
                                     src="{{ empty($teacherDetails->teacher_profile_picture) ? asset('images/allUsers.jpg') : asset($teacherDetails->teacher_profile_picture) }}"
-                                    class="img-thumbnail img-responsive" style="width: 240px;height: 280px"
+                                    class="img-thumbnail img-responsive" style="width: 220px;height: 220px"
                                     onerror="this.onerror=null;this.src='https://cdn4.iconfinder.com/data/icons/instagram-ui-twotone/48/Paul-18-512.png';">
                             </div>
                             <div class="col-xs-12 col-md-8 col-lg-8 ">
@@ -81,11 +82,12 @@
                                         </tr>
                                         <tr>
                                             <td class="text-uppercase">Phone Number :</td>
-                                            <td><b>{{ $teacherDetails->user ? $teacherDetails->user->phoneNumber : '' }}</b></td>
+                                            <td><b>{{ $teacherDetails->user ? $teacherDetails->user->phoneNumber : '' }}</b>
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <td class="text-uppercase">Alt Number :</td>
-                                            <td>{{ $teacherDetails->a_phone_number }} , {{ $teacherDetails->ex_phone_one ?? '' }} , {{ $teacherDetails->ex_phone_two ?? '' }}</td>
+                                            <td class="text-uppercase">Alternative Number :</td>
+                                            <td>{{ $teacherDetails->a_phone_number }}</td>
                                         </tr>
                                         <tr>
                                             <td class="text-uppercase">E-Mail :</td>
@@ -99,7 +101,10 @@
 
                                         <tr>
                                             <td>Present Address : </td>
-                                            <td>City: <strong>{{ $teacherDetails->owndistricts ? $teacherDetails->owndistricts->districtName : '' }}</strong> </br> Area: <strong>{{ $teacherDetails->teacher_present_address }}</strong></td>
+                                            <td>City:
+                                                <strong>{{ $teacherDetails->owndistricts ? $teacherDetails->owndistricts->districtName : '' }}</strong>
+                                                </br> Area: <strong>{{ $teacherDetails->teacher_present_address }}</strong>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Parmanent Address : </td>
@@ -110,32 +115,106 @@
                                     </tbody>
                                 </table>
 
-                                <table>
-                                    <h5 class="py-2"><u>Honours Education Info:</u></h5>
 
-                                    <tbody>
-                                        <tr>
-                                            <td class="text-uppercase">Institution Type : </td>
-                                            <th>{{ $teacherDetails->institype ? $teacherDetails->institype->name : '' }}</th>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-uppercase">Institution : </td>
-                                            <th>{{ $teacherDetails->honours_institute ? $teacherDetails->honours_institute : $teacherDetails->teacher_university }}</th>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-uppercase">Background Medium : </td>
-                                            <th>{{ $teacherDetails->honours_curriculam ? $teacherDetails->honours_curriculam : $teacherDetails->teacher_bk_medium }}</th>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-uppercase">Subject : </td>
-                                            <th>{{ $teacherDetails->honours_subject ? $teacherDetails->honours_subject : $teacherDetails->teacher_subject }}</th>
-                                        </tr>
-                                        <tr>
-                                            <td>Qualification/Degree : </td>
-                                            <th>{{ $teacherDetails->studytype ? $teacherDetails->studytype->name : $teacherDetails->teacher_degree }}</th>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <div class="row">
+                                    <div class="col-md-6">
+
+                                        <table>
+                                            <h5 class="py-2"><u>Honours Education Info:</u></h5>
+
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-uppercase">Institution Type : </td>
+                                                    <th>{{ $teacherDetails->institype ? $teacherDetails->institype->name : '' }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-uppercase">Institution : </td>
+                                                    <th>{{ $teacherDetails->honours_institute ? $teacherDetails->honours_institute : $teacherDetails->teacher_university }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-uppercase">Background Medium : </td>
+                                                    <th>{{ $teacherDetails->honours_curriculam ? $teacherDetails->honours_curriculam : $teacherDetails->teacher_bk_medium }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-uppercase">Subject : </td>
+                                                    <th>{{ $teacherDetails->honours_subject ? $teacherDetails->honours_subject : $teacherDetails->teacher_subject }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td>Qualification/Degree : </td>
+                                                    <th>{{ $teacherDetails->studytype ? $teacherDetails->studytype->name : $teacherDetails->teacher_degree }}
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+
+
+                                    <div class="col-md-6">
+                                        <table>
+                                            <h5 class="py-2"><u>Family Info:</u></h5>
+
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-uppercase">Father's Name : </td>
+                                                    <th>{{ $teacherDetails->father_name }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-uppercase">Father's Phone : </td>
+                                                    <th>{{ $teacherDetails->father_phone }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-uppercase">Mother's Name : </td>
+                                                    <th>{{ $teacherDetails->mother_name }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-uppercase">Mother's Phone : </td>
+                                                    <th>{{ $teacherDetails->mother_phone }}
+                                                    </th>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                    <div class="col-md-6">
+                                        <table>
+                                            <h5 class="py-2"><u>Extra Info:</u></h5>
+
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-uppercase">Local Guardian's Name : </td>
+                                                    <th>{{ $teacherDetails->ex_phone_one }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-uppercase">Relation : </td>
+                                                    <th>{{ $teacherDetails->ex_phone_two }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="">About him/her : </td>
+                                                    <th>{{ $teacherDetails->about_yourself }}
+                                                    </th>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+
+
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -245,8 +324,10 @@
                                     </tr>
                                     <tr>
                                         <th scope="row">Honours</th>
-                                        <td><strong>Study Type:</strong> {{$teacherDetails->studytype ? $teacherDetails->studytype->name : "" }} <br>
-                                            <strong>Institute Type:</strong> {{$teacherDetails->institype ? $teacherDetails->institype->name : "" }} <br>
+                                        <td><strong>Study Type:</strong>
+                                            {{ $teacherDetails->studytype ? $teacherDetails->studytype->name : '' }} <br>
+                                            <strong>Institute Type:</strong>
+                                            {{ $teacherDetails->institype ? $teacherDetails->institype->name : '' }} <br>
                                             <strong>Institute:</strong> <b>{{ $teacherDetails->honours_institute }}</b>
                                         </td>
                                         <td>{{ $teacherDetails->honours_year }}</td>
@@ -257,20 +338,57 @@
                                 </tbody>
                             </table>
 
+                            @if (isset($teacherDetails->user->verify))
+                                <div class="row">
+                                    @if ($teacherDetails->user->verify->nid_card)
+                                        <div class="col-md-3">
+                                            <a href="{{ asset('nid_card/' . $teacherDetails->user->verify->nid_card) }}"
+                                                data-lightbox="product-gallery" data-title="">
+                                                <img style="width: 100%; height: 250px"
+                                                    class="img-responsive img-thumbnail"
+                                                    src="{{ isset($teacherDetails->user->verify) ? asset('nid_card/' . $teacherDetails->user->verify->nid_card) : asset('admins/img/nid.jpg') }}"
+                                                    title="" />
+                                            </a>
+                                        </div>
+                                    @endif
 
+                                    @if ($teacherDetails->user->verify->student_card)
+                                        <div class="col-md-3">
+                                            <a href="{{ asset('student_card/' . $teacherDetails->user->verify->student_card) }}"
+                                                data-lightbox="product-gallery" data-title="">
+                                                <img style="width: 100%; height: 250px"
+                                                    class="img-responsive img-thumbnail"
+                                                    src="{{ isset($teacherDetails->user->verify) ? asset('student_card/' . $teacherDetails->user->verify->student_card) : asset('admins/img/student.jpg') }}"
+                                                    title="" />
+                                            </a>
+                                        </div>
+                                    @endif
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <img style="width: 100%; height: 250px" class="img-responsive img-thumbnail"
-                                        src="{{ isset($teacherDetails->user->verify) ? asset('nid_card/' . $teacherDetails->user->verify->nid_card) : asset('admins/img/nid.jpg') }}"
-                                        title="" />
+                                    @if ($teacherDetails->user->verify->ssc_cft)
+                                        <div class="col-md-3">
+                                            <a href="{{ asset('ssc_cft/' . $teacherDetails->user->verify->ssc_cft) }}"
+                                                data-lightbox="product-gallery" data-title="">
+                                                <img style="width: 100%; height: 250px"
+                                                    class="img-responsive img-thumbnail"
+                                                    src="{{ isset($teacherDetails->user->verify) ? asset('ssc_cft/' . $teacherDetails->user->verify->ssc_cft) : asset('admins/img/student.jpg') }}"
+                                                    title="" />
+                                            </a>
+                                        </div>
+                                    @endif
+
+                                    @if ($teacherDetails->user->verify->hsc_cft)
+                                        <div class="col-md-3">
+                                            <a href="{{ asset('hsc_cft/' . $teacherDetails->user->verify->hsc_cft) }}"
+                                                data-lightbox="product-gallery" data-title="">
+                                                <img style="width: 100%; height: 250px"
+                                                    class="img-responsive img-thumbnail"
+                                                    src="{{ isset($teacherDetails->user->verify) ? asset('hsc_cft/' . $teacherDetails->user->verify->hsc_cft) : asset('admins/img/student.jpg') }}"
+                                                    title="" />
+                                            </a>
+                                        </div>
+                                    @endif
                                 </div>
-                                <div class="col-md-6">
-                                    <img style="width: 100%; height: 250px" class="img-responsive img-thumbnail"
-                                        src="{{ isset($teacherDetails->user->verify) ? asset('student_card/' . $teacherDetails->user->verify->student_card) : asset('admins/img/student.jpg') }}"
-                                        title="" />
-                                </div>
-                            </div>
+                            @endif
 
 
 
@@ -296,7 +414,7 @@
                                 <a href="{{ url('admin/balance/create') }}/{{ $teacherDetails->id }}"
                                     class="btn btn-lg btn-success">Add Balance</a>
                                 <button type="button"
-                                    data-href="{{ url('/admin/tutor-list/delete/'.$teacherDetails->user_id) }}"
+                                    data-href="{{ url('/admin/tutor-list/delete/' . $teacherDetails->user_id) }}"
                                     class="btn btn-lg btn-danger delete_barcode_button"><i class="fa fa-trash font-14">
                                         Delete</i></button>
 
@@ -307,10 +425,6 @@
             </div>
         </div>
 
-
-
-
-
         <div class="alert alert-info fade show mt-3" role="alert">
             <b class="text-center">
                 Job History
@@ -318,7 +432,6 @@
         </div>
 
         <div class="row mt-3">
-
             <div class="col-xl-3 col-md-6 mb-4">
                 <a href="{{ url('/admin/apply_tuition_list/' . $teacherDetails->user_id) }}"
                     class="card border-left-info shadow h-100 py-2">
@@ -393,19 +506,123 @@
         </div>
 
 
+        <div class="alert alert-warning fade show mt-3" role="alert">
+            <b class="text-center">
+                Review & Ratings
+            </b>
+        </div>
+
+        <div>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="form-tab" data-bs-toggle="tab" data-bs-target="#form"
+                        type="button" role="tab" aria-controls="form" aria-selected="true">Add Review</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="list-tab" data-bs-toggle="tab" data-bs-target="#list" type="button"
+                        role="tab" aria-controls="list" aria-selected="false">Review List</button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
+
+
+                    <div class="card px-5 py-4">
+
+                        <form id="reviewForm" method="POST" action="{{ url('admin/tutor/submit_review') }}">
+                            @csrf
+                            <input type="hidden" name="tutor_id" value="{{ $teacherDetails->user_id }}" />
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-2 col-form-label">Rating</label>
+                                <div class="col-sm-10">
+                                    <div class="star-rating">
+                                        <input type="radio" id="star5" name="rating" value="5" />
+                                        <label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
+                                        <input type="radio" id="star4" name="rating" value="4" />
+                                        <label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
+                                        <input type="radio" id="star3" name="rating" value="3" />
+                                        <label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
+                                        <input type="radio" id="star2" name="rating" value="2" />
+                                        <label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
+                                        <input type="radio" id="star1" name="rating" value="1" />
+                                        <label for="star1" title="1 star"><i class="fas fa-star"></i></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="review" class="col-sm-2 col-form-label">Review</label>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" id="review" name="review" rows="3" required></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-2 col-form-label"></div>
+                                <div class="col-sm-10">
+                                    <button type="submit" class="btn btn-primary ml-auto">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
 
 
 
+                </div>
+                <div class="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
+                    <h5>Review List</h5>
+                    <div class="card ">
+
+                        <div class="table-responsive">
+
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Rating</th>
+                                        <th scope="col">Review</th>
+                                        <th scope="col">Posted</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($review_data as $data)
+                                        <tr>
+                                            <th scope="row">
+                                                @if ($data->student_id == 0)
+                                                    <img style="width: 60px; height: 60px" class=""
+                                                        src="{{ asset('/favicon.ico') }}" title="" />
+                                                @else
+                                                    <img style="width: 60px; height: 60px" class=""
+                                                        src="{{ asset($data->student ? $data->student->image : '') }}"
+                                                        title="" />
+                                                @endif
+                                            </th>
+                                            <td>{{ $data->student ? $data->student->name : 'Tutor Sheba' }}</td>
+                                            <td>
+                                                @foreach (range(1, $data->rating) as $i)
+                                                    <span class="text-warning">
+                                                        <i class="fas fa-star"></i>
+                                                    </span>
+                                                @endforeach
+                                            </td>
+                                            <td>{{ $data->review }}</td>
+                                            <td> {{ $data->created_at->format('d-M-Y') }}</td>
+                                        </tr>
+                                    @endforeach
 
 
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
 
 
-
-
-
-
-
-
+        </div>
 
 
         <!-- Modal -->
@@ -434,6 +651,11 @@
 @endsection
 
 @section('script')
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+
     <script type="text/javascript">
         $(document).on('click', 'button.delete_barcode_button', function() {
             if (confirm("Are you sure you want to delete this?")) {

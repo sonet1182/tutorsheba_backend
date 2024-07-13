@@ -25,7 +25,7 @@ class UsersVerify extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id','nid_card','student_card'];
+    protected $guarded = [];
 
 
     public function user()

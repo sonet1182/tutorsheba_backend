@@ -118,8 +118,14 @@ Route::post('stu_login', [StudentAuthController::class, 'login']);
 
 Route::group(['middleware' => ['isStudent'],'prefix' => '/student', 'namespace' => 'Student', 'as' => 'student.'], function () {
     Route::get('user_info', [StudentController::class,'info'])->name('user_info');
+    Route::get('dashboard_info', [StudentController::class,'dashboard_info'])->name('dashboard_info');
+
     Route::post('tutor-request', [StudentController::class,'tutorRequest'])->name('tutorRequest');
     Route::get('posted-jobs', [StudentController::class,'postedJobs'])->name('postedJobs');
+    Route::get('tuition_details/{id}', [StudentController::class,'tuitionView'])->name('tuition-view');
+    Route::post('update_profile_photo', [StudentController::class,'update_profile_photo'])->name('update_profile_photo');
+
+    Route::post('tutor_review', [StudentController::class,'tutor_review'])->name('tutor-review');
 });
 
 

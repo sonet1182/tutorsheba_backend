@@ -9,6 +9,7 @@ use App\Models\Manager;
 use App\Models\Notice;
 use App\Models\rejectedTeacher;
 use App\Models\RequestTeacher;
+use App\Models\Review;
 use App\Models\Student;
 use App\Models\StudentProfile;
 use App\Models\TeacherProfile;
@@ -20,6 +21,7 @@ use App\Models\UsersVerify;
 use App\Models\Verification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Ui\Presets\React;
 
 class StudentController extends Controller
 {
@@ -135,28 +137,18 @@ class StudentController extends Controller
         ]);
     }
 
+
     public function update_profile_photo(Request $request)
     {
-        $teacher = TeacherProfile::where('user_id', auth('sanctum')->user()->id)->first();
-
-        $imageUrl = $this->UploadImage($request, 'image', 'images/', '220', '220', $teacher->teacher_profile_picture);
-
-        $teacher = tap($teacher)->update([
-            'teacher_profile_picture' => $imageUrl,
+        $student = Student::findOrFail(auth('sanctum')->user()->id);
+        $imageUrl = $this->UploadImage($request, 'image', 'images/student/', '220', '220', $student->image);
+        $student = tap($student)->update([
+            'image' => $imageUrl,
         ]);
-
-
-        $teacher->update([
-            'prog' => $teacher->calculateProfilePercentage(),
-        ]);
-
-        $user = User::with('teacher', 'verification')->where('id', auth('sanctum')->user()->id)->first();
-        $notification = TextMessage::where('user_id', $user->id)->where('status', 0)->count();
 
         return response()->json([
             'status' => 200,
-            'data' => $user,
-            'notification' => $notification,
+            'data' => $imageUrl,
             'message' => 'Profile Photo has Updated Successfully'
         ]);
     }
@@ -546,18 +538,6 @@ class StudentController extends Controller
             's_area' => 'required',
         ]);
 
-        // $prev_student = StudentProfile::where('approval',1)->latest()->first();
-        // $prev_manager_id = $prev_student->manager;
-        // $manager_list = Manager::where('delete_status',0)->get();
-        // $manager_max_id = $manager_list->max('id');
-        // $manager_min_id = $manager_list->min('id');
-        // if($prev_manager_id < $manager_max_id)
-        // {
-        //    $next_manager_id = $manager_list->where('id','>',$prev_manager_id)->where('delete_status',0)->first()->id;
-        // }else{
-        //     $next_manager_id = $manager_min_id;
-        // }
-
         if ($validator->fails()) {
             return response()->json([
                 'status' => 204,
@@ -598,8 +578,10 @@ class StudentController extends Controller
     public function postedJobs()
     {
         $user_id = auth('sanctum')->user()->id;
-        $includedColumns = ['id','s_fullName', 's_gender','approval'];
-        $jobs = StudentProfile::with('confirmed','assigned')->where('student_id', $user_id)
+        $includedColumns = ['id', 's_fullName', 's_gender', 'approval', 's_area', 's_districts'];
+
+        $jobs = StudentProfile::with(['confirmed:id,student_id', 'assigned:id,student_id', 'districts:id,districtName'])
+            ->where('student_id', $user_id)
             ->select($includedColumns)
             ->get();
 
@@ -607,6 +589,90 @@ class StudentController extends Controller
             'status' => 200,
             'data' => $jobs,
             'message' => 'Posted Job List',
+        ]);
+    }
+
+
+    public function dashboard_info()
+    {
+        $user_id = auth('sanctum')->user()->id;
+        $pendingJobs = StudentProfile::where('student_id', $user_id)->where('approval', 0)->count();
+        $postedJobs = StudentProfile::where('student_id', $user_id)->where('approval', 1)->whereDoesntHave('confirmed')->count();
+        $confirmedJobs = StudentProfile::where('student_id', $user_id)->has('confirmed')->count();
+        $assignedJobs = StudentProfile::where('student_id', $user_id)->has('assigned')->whereDoesntHave('confirmed')->count();
+        $onHoldJobs = StudentProfile::where('student_id', $user_id)->where('approval', 4)->count();
+        $cancelledJobs = StudentProfile::where('student_id', $user_id)->where('approval', 5)->count();
+
+        $jobs = [
+            'pending' => $pendingJobs,
+            'posted' => $postedJobs,
+            'assigned' => $assignedJobs,
+            'confirmed' => $confirmedJobs,
+            'on_hold' => $onHoldJobs,
+            'cancelled' => $cancelledJobs
+        ];
+
+        $notice = Notice::where('user_id', 0)->where('title', 2)->first()->text;
+
+        return response()->json([
+            'status' => 200,
+            'jobs' => $jobs,
+            'notice' => $notice,
+            'message' => 'Posted Job List',
+        ]);
+    }
+
+    public function tuitionView($id)
+    {
+        $tuition = StudentProfile::where('id', $id)
+            ->select(
+                'student_profile.id as id',
+                'student_profile.s_fullName as s_fullName',
+                'student_profile.s_medium as s_medium',
+                'student_profile.s_districts as s_districts',
+                'student_profile.s_area as s_area',
+                'student_profile.title as title',
+                'student_profile.tutoring_type as tutoring_type',
+                'student_profile.created_at as created_at',
+                'student_profile.s_medium as s_medium',
+                'student_profile.s_class as s_class',
+                'student_profile.s_college as s_college',
+                'student_profile.t_subject as t_subject',
+                'student_profile.s_medium as s_medium',
+                'student_profile.t_salary as t_salary',
+                'student_profile.ex_information as ex_information',
+                'student_profile.approval as approval',
+                'student_profile.s_gender as s_gender',
+                'student_profile.t_gender as t_gender',
+                'student_profile.time as time',
+                'student_profile.t_days as t_days'
+            )->with('districts', 'assigned', 'confirmed','confirmedtutor')->first();
+
+        $review_data = Review::where('tuition_id',$id)->where('student_id', auth('sanctum')->user()->id)->first();
+
+        return response()->json([
+            'status' => 200,
+            'data' => $tuition,
+            'review_data' => $review_data,
+        ]);
+    }
+
+    public function tutor_review(Request $request)
+    {
+        $stu_id = auth('sanctum')->user()->id;
+
+        $tutor_review = new Review();
+        $tutor_review->tuition_id = $request->tuition_id;
+        $tutor_review->tutor_id = $request->tutor_id;
+        $tutor_review->student_id = $stu_id;
+        $tutor_review->review = $request->review;
+        $tutor_review->rating = $request->rating;
+        $tutor_review->save();
+
+        return response()->json([
+            'status' => 200,
+            'review_data' => $tutor_review,
+            'message' => 'Review successfully submitted!',
         ]);
     }
 }

@@ -110,32 +110,109 @@
                                     </tbody>
                                 </table>
 
-                                <table>
-                                    <h5 class="py-2"><u>Honours Education Info:</u></h5>
 
-                                    <tbody>
-                                        <tr>
-                                            <td class="text-uppercase">Institution Type : </td>
-                                            <th>{{ $teacherDetails->institype ? $teacherDetails->institype->name : '' }}</th>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-uppercase">Institution : </td>
-                                            <th>{{ $teacherDetails->honours_institute ? $teacherDetails->honours_institute : $teacherDetails->teacher_university }}</th>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-uppercase">Background Medium : </td>
-                                            <th>{{ $teacherDetails->honours_curriculam ? $teacherDetails->honours_curriculam : $teacherDetails->teacher_bk_medium }}</th>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-uppercase">Subject : </td>
-                                            <th>{{ $teacherDetails->honours_subject ? $teacherDetails->honours_subject : $teacherDetails->teacher_subject }}</th>
-                                        </tr>
-                                        <tr>
-                                            <td>Qualification/Degree : </td>
-                                            <th>{{ $teacherDetails->studytype ? $teacherDetails->studytype->name : $teacherDetails->teacher_degree }}</th>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <div class="row">
+                                    <div class="col-md-6">
+
+                                        <table>
+                                            <h5 class="py-2"><u>Honours Education Info:</u></h5>
+
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-uppercase">Institution Type : </td>
+                                                    <th>{{ $teacherDetails->institype ? $teacherDetails->institype->name : '' }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-uppercase">Institution : </td>
+                                                    <th>{{ $teacherDetails->honours_institute ? $teacherDetails->honours_institute : $teacherDetails->teacher_university }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-uppercase">Background Medium : </td>
+                                                    <th>{{ $teacherDetails->honours_curriculam ? $teacherDetails->honours_curriculam : $teacherDetails->teacher_bk_medium }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-uppercase">Subject : </td>
+                                                    <th>{{ $teacherDetails->honours_subject ? $teacherDetails->honours_subject : $teacherDetails->teacher_subject }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td>Qualification/Degree : </td>
+                                                    <th>{{ $teacherDetails->studytype ? $teacherDetails->studytype->name : $teacherDetails->teacher_degree }}
+                                                    </th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+
+
+                                    <div class="col-md-6">
+                                        <table>
+                                            <h5 class="py-2"><u>Family Info:</u></h5>
+
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-uppercase">Father's Name : </td>
+                                                    <th>{{ $teacherDetails->father_name }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-uppercase">Father's Phone : </td>
+                                                    <th>{{ $teacherDetails->father_phone }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-uppercase">Mother's Name : </td>
+                                                    <th>{{ $teacherDetails->mother_name }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-uppercase">Mother's Phone : </td>
+                                                    <th>{{ $teacherDetails->mother_phone }}
+                                                    </th>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                    <div class="col-md-6">
+                                        <table>
+                                            <h5 class="py-2"><u>Extra Info:</u></h5>
+
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-uppercase">Local Guardian's Name : </td>
+                                                    <th>{{ $teacherDetails->ex_phone_one }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-uppercase">Relation : </td>
+                                                    <th>{{ $teacherDetails->ex_phone_two }}
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="">About him/her : </td>
+                                                    <th>{{ $teacherDetails->about_yourself }}
+                                                    </th>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+
+
+
+                                </div>
+
+
+
                             </div>
                         </div>
                     </div>
@@ -259,18 +336,57 @@
 
 
 
+                            @if (isset($teacherDetails->user->verify))
                             <div class="row">
-                                <div class="col-md-6">
-                                    <img style="width: 100%; height: 250px" class="img-responsive img-thumbnail"
-                                        src="{{ isset($teacherDetails->user->verify) ? asset('nid_card/' . $teacherDetails->user->verify->nid_card) : asset('managers/img/nid.jpg') }}"
-                                        title="" />
-                                </div>
-                                <div class="col-md-6">
-                                    <img style="width: 100%; height: 250px" class="img-responsive img-thumbnail"
-                                        src="{{ isset($teacherDetails->user->verify) ? asset('student_card/' . $teacherDetails->user->verify->student_card) : asset('managers/img/student.jpg') }}"
-                                        title="" />
-                                </div>
+                                @if ($teacherDetails->user->verify->nid_card)
+                                    <div class="col-md-3">
+                                        <a href="{{ asset('nid_card/' . $teacherDetails->user->verify->nid_card) }}"
+                                            data-lightbox="product-gallery" data-title="">
+                                            <img style="width: 100%; height: 250px"
+                                                class="img-responsive img-thumbnail"
+                                                src="{{ isset($teacherDetails->user->verify) ? asset('nid_card/' . $teacherDetails->user->verify->nid_card) : asset('admins/img/nid.jpg') }}"
+                                                title="" />
+                                        </a>
+                                    </div>
+                                @endif
+
+                                @if ($teacherDetails->user->verify->student_card)
+                                    <div class="col-md-3">
+                                        <a href="{{ asset('student_card/' . $teacherDetails->user->verify->student_card) }}"
+                                            data-lightbox="product-gallery" data-title="">
+                                            <img style="width: 100%; height: 250px"
+                                                class="img-responsive img-thumbnail"
+                                                src="{{ isset($teacherDetails->user->verify) ? asset('student_card/' . $teacherDetails->user->verify->student_card) : asset('admins/img/student.jpg') }}"
+                                                title="" />
+                                        </a>
+                                    </div>
+                                @endif
+
+                                @if ($teacherDetails->user->verify->ssc_cft)
+                                    <div class="col-md-3">
+                                        <a href="{{ asset('ssc_cft/' . $teacherDetails->user->verify->ssc_cft) }}"
+                                            data-lightbox="product-gallery" data-title="">
+                                            <img style="width: 100%; height: 250px"
+                                                class="img-responsive img-thumbnail"
+                                                src="{{ isset($teacherDetails->user->verify) ? asset('ssc_cft/' . $teacherDetails->user->verify->ssc_cft) : asset('admins/img/student.jpg') }}"
+                                                title="" />
+                                        </a>
+                                    </div>
+                                @endif
+
+                                @if ($teacherDetails->user->verify->hsc_cft)
+                                    <div class="col-md-3">
+                                        <a href="{{ asset('hsc_cft/' . $teacherDetails->user->verify->hsc_cft) }}"
+                                            data-lightbox="product-gallery" data-title="">
+                                            <img style="width: 100%; height: 250px"
+                                                class="img-responsive img-thumbnail"
+                                                src="{{ isset($teacherDetails->user->verify) ? asset('hsc_cft/' . $teacherDetails->user->verify->hsc_cft) : asset('admins/img/student.jpg') }}"
+                                                title="" />
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
+                        @endif
 
 
 

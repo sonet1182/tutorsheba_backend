@@ -45,15 +45,16 @@ class HomeController extends Controller
 
     public function broadcast_notification()
     {
-        $notice = Notice::find(1);
-        return view('admin.layout.notification.broadcast')->with('notice', $notice);
+        $tutor_notice = Notice::where('title',1)->first();
+        $stu_notice = Notice::where('title',2)->first();
+        return view('admin.layout.notification.broadcast',compact('tutor_notice','stu_notice'));
     }
 
     public function broadcast_notification_post(Request $request)
     {
-        $notice = Notice::find(1);
+        $notice = Notice::where('title',$request->user)->first();
 
-        $notice->title = $request->input('title');
+        $notice->title = $request->user;
         $notice->text = $request->input('text');
         $notice->user_id = 0;
         $notice->update();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AssignedTeacher;
 use App\Models\confirmedTeacher;
 use App\Models\rejectedTeacher;
+use App\Models\Review;
 use App\Models\TeacherProfile;
 use App\Models\TuitionRequest;
 use App\Models\User;
@@ -72,7 +73,9 @@ class TeacherRequestController extends Controller
             $assigned = AssignedTeacher::where('teacher_id', $id)->count();
             $confirmed = confirmedTeacher::where('teacher_id', $id)->count();
             $cancelled = rejectedTeacher::where('teacher_id', $id)->count();
-            return view('admin.layout.teacher.teacher_details', compact('teacherDetails', 'applied', 'assigned', 'confirmed', 'cancelled'));
+            $review_data = Review::where('tutor_id', $id)->with('student')->get();
+
+            return view('admin.layout.teacher.teacher_details', compact('teacherDetails', 'applied', 'assigned', 'confirmed', 'cancelled', 'review_data'));
         } else {
             $teacherProfile = new TeacherProfile();
             $teacherProfile->user_id = $id;
@@ -85,8 +88,9 @@ class TeacherRequestController extends Controller
             $assigned = AssignedTeacher::where('teacher_id', $id)->count();
             $confirmed = confirmedTeacher::where('teacher_id', $id)->count();
             $cancelled = rejectedTeacher::where('teacher_id', $id)->count();
+            $review_data = Review::where('tutor_id', $id)->with('student')->get();
 
-            return view('admin.layout.teacher.teacher_details', compact('teacherDetails', 'applied', 'assigned', 'confirmed', 'cancelled'));
+            return view('admin.layout.teacher.teacher_details', compact('teacherDetails', 'applied', 'assigned', 'confirmed', 'cancelled', 'review_data'));
         }
     }
     public function homeApprovalTeacherList()

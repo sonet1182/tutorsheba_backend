@@ -49,6 +49,33 @@ class TextMessageController extends Controller
     {
         $users = $req->all_option;
         $message = $req->input('message');
+
+        $curl = curl_init();
+
+        // Iterate over each user ID
+        foreach ($users as $user_phone) {
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.sms.net.bd/sendsms',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => array(
+                    'api_key' => '2dYuSnQNkQUUahkgg5f4EkMC414CIm0Kp7H0m1qH',
+                    'msg' => $message." - Tutor Sheba",
+                    'to' => $user_phone
+                ),
+            ));
+            $response = curl_exec($curl);
+        }
+
+        curl_close($curl);
+
+        return ("Your messages have been sent to all selected users!");
+    }
+
+    function send_bulk_text2(Request $req)
+    {
+        $users = $req->all_option;
+        $message = $req->input('message');
         $to = implode(',', $users);
 
         $curl = curl_init();

@@ -216,6 +216,26 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="time">Tutoring Duration</label>
+                                        <select name="time_duration" class="form-control single-select">
+                                            <option value="" >Select Tutoring Duration</option>
+                                            <option value="1:00 Hour" > 1:00 Hour</option>
+                                            <option value="1:30 Hour" > 1:30 Hour</option>
+                                            <option value="2:00 Hour" > 2:00 Hour</option>
+                                            <option value="2:30 Hour" > 2:30 Hour</option>
+                                            <option value="3:00 Hour" > 3:00 Hour</option>
+                                            <option value="3:30 Hour" > 3:30 Hour</option>
+                                            <option value="4:00 Hour" > 4:00 Hour</option>
+                                            <option value="4:30 Hour" > 4:30 Hour</option>
+                                            <option value="5:00 Hour" > 5:00 Hour</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="t_salary">Salary range</label>

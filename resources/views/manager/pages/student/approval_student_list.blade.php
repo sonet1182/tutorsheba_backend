@@ -73,12 +73,10 @@
                                             </td>
                                             <td>{{ $student->s_fullName }}
                                                 @if ($student->partner)
-                                                    <br>
-                                                    <a
-                                                        href="{{ url('manager/uddokta_details/' . $student->partner->id) }}">
-                                                        <span
-                                                            class="badge badge-pill badge-info">{{ $student->partner->name }}</span>
-                                                    </a>
+                                                    <br><span class="badge badge-pill badge-info">{{ $student->partner->name }}</span>
+                                                @endif
+                                                @if ($student->guardian)
+                                                    <br><a href="{{ url('manager/registered-student/details/' . $student->guardian->id) }}" class="badge badge-pill badge-success">{{ $student->guardian->name }}</a>
                                                 @endif
                                             </td>
                                             <td>{{ $student->s_phoneNumber }}</td>

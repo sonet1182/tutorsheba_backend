@@ -34,6 +34,7 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
+                'status' => 500,
                 'validation_errors' => $validator->errors(),
             ]);
         } else {
@@ -46,10 +47,12 @@ class AuthController extends Controller
 
             $token = $user->createToken($user->phoneNumber . '_Token')->plainTextToken;
 
+            $userData = $user->only(['id', 'name', 'phoneNumber', 'created_at', 'image']);
+
             return response()->json([
                 'status' => 200,
                 'api_token' => $token,
-                'data' => $user,
+                'data' => $userData,
                 'user_type' => 'student',
                 'notification' => 0,
                 'message' => 'You have registered as a Student Successfully',
@@ -78,7 +81,6 @@ class AuthController extends Controller
                     'data' => $request->email,
                 ]);
             } else {
-
                 if ($user->status != 1) {
                     return response()->json([
                         'status' => 401,
@@ -89,10 +91,12 @@ class AuthController extends Controller
 
                 $token = $user->createToken($user->email . '_Token')->plainTextToken;
 
+                $userData = $user->only(['id', 'name', 'phoneNumber', 'created_at', 'image']);
+
                 return response()->json([
                     'status' => 200,
                     'api_token' => $token,
-                    'data' => $user,
+                    'data' => $userData,
                     'notification' => 0,
                     'user_type' => 'student',
                     'message' => 'Logged In Successfully',

@@ -65,6 +65,11 @@
                         </li>
                     </ul>
                 </li>
+                <li class="{{ $request->segment(2) == 'registered-student' ? 'active' : '' }}">
+                    <a href="{{ url('/admin/registered-student') }}"><i class="sidebar-item-icon fa fa-ticket"></i>
+                        <span class="nav-label">Registered Student Account</span>
+                    </a>
+                </li>
                 <li class="{{ $request->segment(2) == 'student' ? 'active' : '' }}">
                     <a href="{{ url('/admin/student/create') }}"><i class="sidebar-item-icon fa fa-ticket"></i>
                         <span class="nav-label">Submit new tuition</span>
