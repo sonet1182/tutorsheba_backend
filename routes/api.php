@@ -84,7 +84,6 @@ Route::group(['middleware' => ['isTutor'],'prefix' => '/tutor', 'namespace' => '
 
 
     Route::post('tuition_apply', [TutorController::class,'tuition_apply'])->name('tuition_apply');
-
     Route::get('tuition_matching_payments_list', [TutorController::class,'tuition_matching_payments_list'])->name('tuition_matching_payments_list');
     Route::get('tuition_matching_transactions/{id}', [TutorController::class,'tuition_matching_transactions'])->name('tuition_matching_transactions');
 
@@ -98,6 +97,10 @@ Route::group(['middleware' => ['isTutor'],'prefix' => '/tutor', 'namespace' => '
     Route::get('confirmed_tuition_list/{limit}', [TutorController::class,'confirmedTuitionList'])->name('confirmed_tuition_list');
     Route::get('cancelled_tuition_list/{limit}', [TutorController::class,'cancelledTuitionList'])->name('cancelled_tuition_list');
 
+    //Tuition Matching fee payment by bkash gateway
+    Route::post('payment/get_token', [TutorController::class,'getToken'])->name('getToken');
+    Route::post('payment/create', [TutorController::class,'create_payment'])->name('create_payment');
+    Route::post('payment/execute', [TutorController::class,'execute_payment'])->name('execute_payment');
 });
 
 

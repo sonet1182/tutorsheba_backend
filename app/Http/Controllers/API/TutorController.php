@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Models\UsersVerify;
 use App\Models\Verification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class TutorController extends Controller
 {
@@ -107,7 +108,7 @@ class TutorController extends Controller
         ]);
 
         return response()->json([
-            'ss'=> $request->all(),
+            'ss' => $request->all(),
             'status' => 200,
             'message' => 'Profile Updated'
         ]);
@@ -559,6 +560,98 @@ class TutorController extends Controller
                 'status' => 200,
                 'message' => 'Your request successfully submitted!',
             ]);
+        }
+    }
+
+    public function getToken(Request $request)
+    {
+        $requestData = [
+            'app_key' => '0vWQuCRGiUX7EPVjQDr0EUAYtc',
+            'app_secret' => 'jcUNPBgbcqEDedNKdvE4G1cAK7D3hCjmJccNPZZBq96QIxxwAMEx',
+        ];
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'username' => '01770618567',
+            'password' => 'D7DaC<*E*eG',
+        ])->post('https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout/token/grant', $requestData);
+
+
+        if ($response->successful()) {
+            return response()->json($response->json(), 200);
+        } else {
+            return response()->json(['error' => 'Failed to get token'], $response->status());
+        }
+    }
+
+    public function create_payment(Request $request)
+    {
+
+        $assign = confirmedTeacher::find($request->confirmation_id);
+        $assign->paid = $assign->paid + $request->payment;
+        $assign->due = ($assign->fee - $assign->discount) - $assign->paid;
+        $assign->save();
+
+        $manager_id = studentProfile::find($assign->student_id)->manager;
+
+        $requestData = [
+            "mode" => "0011",
+            "payerReference" => auth('sanctum')->user()->phoneNumber,
+            "callbackURL" => "http://localhost:3000/profile/payments/tuition_matching",
+            "merchantAssociationInfo" => "MI05MID54RF09123456One",
+            "amount" => $request->payment,
+            "currency" => "BDT",
+            "intent" => "sale",
+            "merchantInvoiceNumber" => "Inv",
+        ];
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'Authorization' => $request->id_token,
+            'X-App-Key' => '0vWQuCRGiUX7EPVjQDr0EUAYtc',
+        ])->post('https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout/create', $requestData);
+
+
+        $txn = new Transaction();
+        $txn->confirmation_id = $assign->id;
+        $txn->teacher_id = auth('sanctum')->user()->id;
+        $txn->payment = $request->payment;
+        $txn->remark = "Bkash Payment";
+        $txn->manager = $manager_id;
+        $txn->status = 0;
+        $txn->save();
+
+
+
+        
+
+        if ($response->successful()) {
+            return response()->json($response->json(), 200);
+        } else {
+            return response()->json(['error' => 'Failed to create payment'], $response->status());
+        }
+    }
+
+    public function execute_payment(Request $request)
+    {
+        $requestData = [
+            "paymentID" => $request->payment_id,
+        ];
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+            'Authorization' => $request->id_token,
+            'X-App-Key' => '0vWQuCRGiUX7EPVjQDr0EUAYtc',
+        ])->post('https://tokenized.sandbox.bka.sh/v1.2.0-beta/tokenized/checkout/execute', $requestData);
+
+
+        if ($response->successful()) {
+            return response()->json($response->json(), 200);
+        } else {
+            return response()->json(['error' => 'Failed to create payment'], $response->status());
         }
     }
 }

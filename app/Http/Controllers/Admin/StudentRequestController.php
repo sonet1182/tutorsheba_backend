@@ -424,12 +424,6 @@ class StudentRequestController extends Controller
 
     public function payment_submit($id, Request $req)
     {
-        // $rejected = confirmedTeacher::where('student_id',$req->input('student_id'))->where('teacher_id',$req->input('teacher_id'))->first();
-        // if($rejected)
-        // {
-        //     $rejected->delete();
-        // }
-
         $assign = confirmedTeacher::find($id);
         $assign->paid = $assign->paid + $req->input('payment');
         $assign->due = ($assign->fee - $assign->discount) - $assign->paid;

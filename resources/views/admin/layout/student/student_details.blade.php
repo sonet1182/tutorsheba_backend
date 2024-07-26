@@ -270,8 +270,8 @@
                                             <a href="{{ url('/admin/teacher_details') }}{{ $assigned->teacher->id }}">
 
                                                 <img class="styleBorderImg"
-                                                    src="{{ asset($assigned->teacher->teacher->teacher_profile_picture) }}"
-                                                    alt="{{ $assigned->teacher->teacher->teacher_profile_picture }}"
+                                                    src="{{ asset($assigned->teacher ?? $assigned->teacher->teacher->teacher_profile_picture) }}"
+                                                    alt="{{ $assigned->teacher ?? $assigned->teacher->teacher->teacher_profile_picture }}"
                                                     onerror="this.onerror=null;this.src='https://cdn4.iconfinder.com/teacher/icons/instagram-ui-twotone/48/Paul-18-512.png';" /></a>
                                             <br>
                                             <strong>ID # {{ $assigned->teacher->teacher->teacher_id }} </strong>
@@ -428,9 +428,10 @@
                                                                 <div class="form-group">
                                                                     <span for="text-danger">Comission Fee (Default 60% ):
                                                                         <sup style="color: red">*</sup></span>
-                                                                    <input type="number" min="0" name="fee"
-                                                                        id="fee" class="form-control my-2"
-                                                                        required="required">
+                                                                    <input type="number" min="0"
+                                                                        value="{{ (int) ((int) $studentDetails->t_salary * 0.6) }}"
+                                                                        name="fee" id="fee"
+                                                                        class="form-control my-2" required="required">
                                                                     <span for="text-danger">Advance:</span>
                                                                     <input type="number" min="0" name="advance"
                                                                         class="form-control my-2">
@@ -839,7 +840,7 @@
         const feeInput = document.getElementById('fee');
         const tuitionFee = document.getElementById('tuitionFee');
         const leadPercentageInput = document.getElementById(
-        'lead_percentage'); // Assuming there is only one element with this name
+            'lead_percentage'); // Assuming there is only one element with this name
 
         tSalaryInput.addEventListener('input', function() {
             const tSalary = parseFloat(tSalaryInput.value);
